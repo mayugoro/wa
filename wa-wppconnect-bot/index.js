@@ -5,6 +5,7 @@ const chalk = require("chalk");
 // Import handler fitur
 const handleTikTok = require("./handlers/tiktok");
 const handleSetBotPic = require("./handlers/setbotpic");
+const handleSetNameBot = require("./handlers/setnamebot");
 const handleStiker = require("./handlers/stiker");
 const handleTes = require("./handlers/tes");
 const handleMenu = require("./handlers/menu");
@@ -16,7 +17,7 @@ wpp
     headless: true,
     qrTimeout: 0,
     useChrome: false,
-    browserArgs: ["--no-sandbox", "--disable-setuid-sandbox"], // ← Penting untuk VPS
+    browserArgs: ["--no-sandbox", "--disable-setuid-sandbox"], // Untuk VPS
   })
   .then((client) => {
     console.log(chalk.green.bold("✅ BOT AKTIF — kirim perintah atau link TikTok"));
@@ -25,8 +26,9 @@ wpp
       try {
         if (msg.isGroupMsg) return;
 
-        const isMedia = msg.mimetype && (msg.type === 'image' || msg.type === 'video');
-        const body = (!isMedia && msg.body) ? msg.body.trim().toLowerCase() : null;
+        const isMedia =
+          msg.mimetype && (msg.type === "image" || msg.type === "video");
+        const body = !isMedia && msg.body ? msg.body.trim().toLowerCase() : null;
         const caption = msg.caption?.trim().toLowerCase() || null;
 
         const getCommand = (input) =>
@@ -34,7 +36,7 @@ wpp
 
         const command = getCommand(body) || getCommand(caption);
 
-        // Debug
+        // Debug log
         console.log("📥 Pesan diterima:", {
           from: msg.from,
           type: msg.type,
@@ -45,11 +47,12 @@ wpp
 
         // === Handler perintah ===
         if (["tes", "test"].includes(command)) return handleTes(client, msg);
-        if (["setbotpic"].includes(command)) return handleSetBotPic(client, msg);
         if (["menu"].includes(command)) return handleMenu(client, msg);
         if (["stiker", "sticker"].includes(command)) return handleStiker(client, msg);
+        if (["setbotpic"].includes(command)) return handleSetBotPic(client, msg);
+        if (["setnamebot"].includes(command)) return handleSetNameBot(client, msg);
 
-        // === Handler link TikTok ===
+        // === Handler TikTok URL ===
         if (body?.includes("tiktok.com") || body?.includes("vt.tiktok.com")) {
           return handleTikTok(client, msg);
         }
