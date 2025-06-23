@@ -16,6 +16,7 @@ wpp
     headless: true,
     qrTimeout: 0,
     useChrome: false,
+    browserArgs: ["--no-sandbox", "--disable-setuid-sandbox"], // ← Penting untuk VPS
   })
   .then((client) => {
     console.log(chalk.green.bold("✅ BOT AKTIF — kirim perintah atau link TikTok"));
@@ -28,23 +29,27 @@ wpp
         const body = (!isMedia && msg.body) ? msg.body.trim().toLowerCase() : null;
         const caption = msg.caption?.trim().toLowerCase() || null;
 
-        const getCommand = (input) => {
-          if (!input) return null;
-          return input.replace(/^\/|^\./, '').split(" ")[0]; // Hilangkan prefix
-        };
+        const getCommand = (input) =>
+          input?.replace(/^\/|^\./, "").split(" ")[0] || null;
 
         const command = getCommand(body) || getCommand(caption);
 
         // Debug
-        console.log("📥 Pesan diterima:", { type: msg.type, body, caption, command });
+        console.log("📥 Pesan diterima:", {
+          from: msg.from,
+          type: msg.type,
+          body,
+          caption,
+          command,
+        });
 
-        // Handler perintah
+        // === Handler perintah ===
         if (["tes", "test"].includes(command)) return handleTes(client, msg);
         if (["setbotpic"].includes(command)) return handleSetBotPic(client, msg);
         if (["menu"].includes(command)) return handleMenu(client, msg);
         if (["stiker", "sticker"].includes(command)) return handleStiker(client, msg);
 
-        // Handler link TikTok
+        // === Handler link TikTok ===
         if (body?.includes("tiktok.com") || body?.includes("vt.tiktok.com")) {
           return handleTikTok(client, msg);
         }
