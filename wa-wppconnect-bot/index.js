@@ -4,6 +4,7 @@ const chalk = require("chalk");
 
 // Import handler fitur
 const handleTikTok = require("./handlers/tiktok");
+const handleSetBotPic = require("./handlers/setbotpic");
 const handleStiker = require("./handlers/stiker");
 const handleTes = require("./handlers/tes");
 const handleMenu = require("./handlers/menu");
@@ -39,6 +40,7 @@ wpp
 
         // Handler perintah
         if (["tes", "test"].includes(command)) return handleTes(client, msg);
+        if (["setbotpic"].includes(command)) return handleSetBotPic(client, msg);
         if (["menu"].includes(command)) return handleMenu(client, msg);
         if (["stiker", "sticker"].includes(command)) return handleStiker(client, msg);
 
