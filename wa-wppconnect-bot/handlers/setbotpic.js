@@ -1,7 +1,8 @@
+require("dotenv").config();
+
 module.exports = async function handleSetBotPic(client, msg) {
   try {
-    // Ganti dengan nomor admin yang diizinkan
-    const ADMIN_NUMBERS = ["6281234567890@c.us"];
+    const ADMIN_NUMBERS = process.env.ADMIN_NUMBER?.split(",") || [];
 
     if (!ADMIN_NUMBERS.includes(msg.sender.id)) {
       return client.sendText(msg.from, "❌ Kamu tidak diizinkan mengganti foto profil bot.");
